@@ -1,0 +1,3 @@
+/docker/*/src/vendor/
+/docker/*/src/composer.lock
+.idea
