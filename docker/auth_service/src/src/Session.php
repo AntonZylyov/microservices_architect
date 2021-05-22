@@ -136,11 +136,6 @@ class Session extends Entity
 		return $this;
 	}
 
-	public function isIdempotenceSupported(): bool
-	{
-		return false;
-	}
-
 	public static function createFromArray(array $fields): self
 	{
 		$user = new self();

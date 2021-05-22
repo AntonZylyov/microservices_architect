@@ -3,9 +3,9 @@
 namespace AuthService;
 
 use BaseMicroservice\Database;
-use BaseMicroservice\Entity;
+use BaseMicroservice\IdempotentEntity;
 
-class User extends Entity
+class User extends IdempotentEntity
 {
 	public static function create(
 		string $login,
@@ -29,22 +29,6 @@ class User extends Entity
 	{
 
 		$fields = Database::getInstance()->selectOne(static::getTableName(), "login = ?", [$login]);
-		if ($fields)
-		{
-			return static::createFromArray($fields);
-		}
-		return null;
-	}
-
-	public static function getByIdempotenceKey(string $idempotenceKey): ?self
-	{
-		$fields = Database::getInstance()->selectOne(
-			static::getTableName(),
-			'idempotenceKey = ? AND created > ?',
-			[
-				$idempotenceKey,
-				date('Y-m-d H:i:s', time() - 60) // создано меньше минуты назад
-			]);
 		if ($fields)
 		{
 			return static::createFromArray($fields);
