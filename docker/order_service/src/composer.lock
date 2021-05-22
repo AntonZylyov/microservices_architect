@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AntonZylyov/base_microservice.git",
-                "reference": "90e3588cf1902b0897c86b2374b0ab1e2b8a66e1"
+                "reference": "eaa32c51d9c5fdd98abb89fdaadc2c2f1e94e3f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AntonZylyov/base_microservice/zipball/90e3588cf1902b0897c86b2374b0ab1e2b8a66e1",
-                "reference": "90e3588cf1902b0897c86b2374b0ab1e2b8a66e1",
+                "url": "https://api.github.com/repos/AntonZylyov/base_microservice/zipball/eaa32c51d9c5fdd98abb89fdaadc2c2f1e94e3f9",
+                "reference": "eaa32c51d9c5fdd98abb89fdaadc2c2f1e94e3f9",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 "source": "https://github.com/AntonZylyov/base_microservice/tree/master",
                 "issues": "https://github.com/AntonZylyov/base_microservice/issues"
             },
-            "time": "2021-05-16T10:00:50+00:00"
+            "time": "2021-05-22T19:57:04+00:00"
         },
         {
             "name": "fig/http-message-util",
