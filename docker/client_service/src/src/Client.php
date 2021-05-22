@@ -2,10 +2,9 @@
 
 namespace ClientService;
 
-use BaseMicroservice\Database;
-use BaseMicroservice\Entity;
+use BaseMicroservice\IdempotentEntity;
 
-class Client extends Entity
+class Client extends IdempotentEntity
 {
 	public static function create(
 		string $firstName,
@@ -24,22 +23,6 @@ class Client extends Entity
 			->save();
 
 		return $client;
-	}
-
-	public static function getByIdempotenceKey(string $idempotenceKey): ?self
-	{
-		$fields = Database::getInstance()->selectOne(
-			static::getTableName(),
-			'idempotenceKey = ? AND created > ?',
-			[
-				$idempotenceKey,
-				date('Y-m-d H:i:s', time() - 60) // создано меньше минуты назад
-			]);
-		if ($fields)
-		{
-			return static::createFromArray($fields);
-		}
-		return null;
 	}
 
 	/**
