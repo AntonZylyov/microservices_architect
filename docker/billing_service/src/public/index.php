@@ -129,6 +129,8 @@ $app->addRoute(
 				'error' => 'Денег нет но вы держитесь'
 			];
 		}
+		// тут явно не хватает проверки идемпотентности запроса на изменение баланса, но
+		// реализовывать его я не хочу
 		$account->addToBalance(-$sum);
 
 		return $account->toArray();
@@ -163,7 +165,8 @@ $app->addRoute(
 				'error' => 'Account not found'
 			];
 		}
-
+		// тут явно не хватает проверки идемпотентности запроса на изменение баланса, но
+		// реализовывать его я не хочу
 		$account->addToBalance($sum);
 
 		return $account->toArray();
