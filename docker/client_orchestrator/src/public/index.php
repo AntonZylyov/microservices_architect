@@ -74,6 +74,10 @@ $app->addRoute(
 		{
 			$clientService->approveClient($clientId);
 
+			// создание учетки в системе биллинга считаем не критичным (ну вот такая у нас система)
+			$billingService = new \ClientOrchestrator\BillingService($config);
+			$billingService->createAccount($clientId);
+
 			// уведомление считаем не критичным и его успешность на результат не влияет
 			$notificationService = new \ClientOrchestrator\NotificationService($config);
 			$notificationService->notifyNewClientCreated(
@@ -92,7 +96,8 @@ $app->addRoute(
 		}
 
 		return [
-			'success' => 'ok'
+			'clientId' => $clientId,
+			'login' => $login,
 		];
 	}
 );
