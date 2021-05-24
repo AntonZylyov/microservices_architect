@@ -73,6 +73,15 @@ $app->addRoute(
 		if ($registerResult->isSuccess())
 		{
 			$clientService->approveClient($clientId);
+
+			// уведомление считаем не критичным и его успешность на результат не влияет
+			$notificationService = new \ClientOrchestrator\NotificationService($config);
+			$notificationService->notifyNewClientCreated(
+				(string)($data['firstName'] ?? ''),
+				(string)($data['lastName'] ?? ''),
+				(string)($data['email'] ?? ''),
+				$login
+			);
 		}
 		else
 		{

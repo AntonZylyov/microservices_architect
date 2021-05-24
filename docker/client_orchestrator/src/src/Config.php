@@ -13,4 +13,9 @@ class Config extends \BaseMicroservice\Config
 	{
 		return $this->getValue('CLIENT_SERVICE_HOST');
 	}
+
+	public function getNotificationServiceHost(): string
+	{
+		return $this->getValue('NOTIFICATION_SERVICE_HOST');
+	}
 }
