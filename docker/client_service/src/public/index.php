@@ -49,6 +49,31 @@ $app->addRoute(
 );
 
 $app->addRoute(
+	HttpMethod::GET,
+	'/client/{clientId}',
+	static function (Context $context): array
+	{
+		$clientId = $context->getRouteArgs()['clientId'] ?? null;
+
+		if (!$clientId)
+		{
+			return [
+				'error' => 'Client id was not found'
+			];
+		}
+		$client = \ClientService\Client::getById((int)$clientId);
+		if ($client)
+		{
+			return $client->toArray();
+		}
+
+		return [
+			'error' => 'Client not found'
+		];
+	}
+);
+
+$app->addRoute(
 	HttpMethod::POST,
 	'/client/approve',
 	static function (Context $context): array
