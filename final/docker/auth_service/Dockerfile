@@ -6,3 +6,4 @@ COPY ./src /app
 RUN curl -sS https://getcomposer.org/installer | \
             php -- --install-dir=/usr/bin/ --filename=composer
 RUN /usr/bin/composer install
+
