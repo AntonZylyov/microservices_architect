@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myapp_v4.fullname" . }}
+  labels:
+    app: {{ include "myapp_v4.fullname" . }}-app
+spec:
+  replicas: {{ .Values.userApiReplicaCount }}
+  selector:
+     matchLabels:
+       app: {{ include "myapp_v4.fullname" . }}-app
+  template:
+     metadata:
+        labels:
+          app: {{ include "myapp_v4.fullname" . }}-app
+     spec:
+        volumes:
+          - name: {{ include "myapp_v4.fullname" . }}-shared-files
+            emptyDir: {}
+
+          - name: {{ include "myapp_v4.fullname" . }}-nginx-config-volume
+            configMap:
+              name: {{ include "myapp_v4.fullname" . }}-nginx-config
+
+        containers:
+          - image: {{ .Values.image.userApi }}
+            name: {{ include "myapp_v4.fullname" . }}-app
+            env:
+              - name: DATABASE_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v4.fullname" . }}-php-config
+                    key: DATABASE_HOST
+              - name: DATABASE_PORT
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v4.fullname" . }}-php-config
+                    key: DATABASE_PORT
+              - name: DATABASE_NAME
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v4.fullname" . }}-php-config
+                    key: DATABASE_NAME
+              - name: DATABASE_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "myapp_v4.fullname" . }}-php-secret
+                    key: DATABASE_USERNAME
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "myapp_v4.fullname" . }}-php-secret
+                    key: DATABASE_PASSWORD
+            volumeMounts:
+              - name: {{ include "myapp_v4.fullname" . }}-shared-files
+                mountPath: /var/www/html
+            lifecycle:
+              postStart:
+                exec:
+                  command: ["/bin/sh", "-c", "cp -r /app/. /var/www/html"]
+
+
+          - image: nginx:1.7.9
+            name: {{ include "myapp_v4.fullname" . }}-nginx
+            ports:
+                - name: web
+                  containerPort: 80
+            volumeMounts:
+              - name: {{ include "myapp_v4.fullname" . }}-shared-files
+                mountPath: /var/www/html
+              - name: {{ include "myapp_v4.fullname" . }}-nginx-config-volume
+                mountPath: /etc/nginx/conf.d/default.conf
+                subPath: default.conf

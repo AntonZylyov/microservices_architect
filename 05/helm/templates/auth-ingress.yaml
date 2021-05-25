@@ -1,0 +1,19 @@
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "myapp_v5.fullname" . }}-ingress-auth
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host:  {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.authAppPath }}($|/)(.*)
+            backend:
+              serviceName: {{ include "myapp_v5.fullname" . }}-auth
+              servicePort: {{ .Values.service.authAppPort }}

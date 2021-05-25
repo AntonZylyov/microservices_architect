@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "fae402aa-53d4-4f09-a79b-5146fc57b22d",
+		"name": "07_idempotence",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Регистрация пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"pm.collectionVariables.set('userId', responseJson.id);\r",
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"{{firstName}}\",\r\n    \"lastName\":\"{{lastName}}\",\r\n    \"email\":\"{{email}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/userService/user/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"userService",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Пополнить счет пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка пополнения счета\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.success).to.eql('ok');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/billingService/billing/deposit",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"billingService",
+						"billing",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить X-Etag",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"pm.collectionVariables.set('orderEtag', pm.response.headers.get('X-Etag'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "If-Match",
+						"value": "1",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/orderService/orders",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orderService",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Создать успешный заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка создания успешного заказа\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.success).to.eql('ok');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-If-Match",
+						"value": "{{orderEtag}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"100\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/orderService/order/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orderService",
+						"order",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Не создать заказ из-за неправильного заголовка X-If-Match",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка ошибки создания заказа\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.error).to.eql('Idempotence check failed');\r",
+							"    pm.expect(pm.response.status).to.eql('Conflict');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-If-Match",
+						"value": "{{orderEtag}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/orderService/order/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orderService",
+						"order",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://bit.homework"
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "orderEtag",
+			"value": ""
+		}
+	]
+}

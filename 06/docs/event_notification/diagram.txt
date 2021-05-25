@@ -1,0 +1,115 @@
+sequenceDiagram
+
+participant User
+participant Gateway
+participant Message Broker
+participant User Service
+participant Billing Service
+participant Order Service
+participant Notification Service
+
+rect rgb(240, 240, 240)
+Note over User, Billing Service: Создание пользователя
+User->>Gateway: POST /user/register
+activate Gateway
+Gateway->>Message Broker: publish
+activate Message Broker
+Note left of Message Broker: UserCreateRequested
+
+Message Broker-->>User Service: consume
+deactivate Message Broker
+activate User Service
+User Service->>Message Broker: publish
+deactivate User Service
+activate Message Broker
+Note right of Message Broker: UserCreated
+
+Message Broker-->>Gateway: consume
+Gateway->>User Service: GET /user/{userId}
+activate User Service
+User Service-->>Gateway: {userId:"...", firstName: "...", lastName: "..."}
+deactivate User Service
+Gateway-->>User: 201 CREATED
+deactivate Gateway
+
+Message Broker-->>Billing Service: consume
+deactivate Message Broker
+activate Billing Service
+Billing Service->>Message Broker: publish
+deactivate Billing Service
+Note right of Message Broker: BillingAccountCreated
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+rect rgb(240, 240, 240)
+Note over User, Notification Service: Оформление заказа
+User->>Gateway: POST /order/create
+activate Gateway
+Gateway->>Message Broker: publish
+activate Message Broker
+Note left of Message Broker: OrderCreateRequested
+
+Message Broker-->>Order Service: consume
+deactivate Message Broker
+activate Order Service
+Order Service->>Message Broker: publish
+deactivate Order Service
+activate Message Broker
+Note right of Message Broker: OrderCreated
+Note right of Message Broker: OrderPaymentRequested
+Message Broker-->>Gateway: consume
+Gateway-->>User: 201 CREATED
+deactivate Gateway
+
+Message Broker-->>Billing Service: consume
+deactivate Message Broker
+activate Billing Service
+Billing Service->>Order Service: GET /order/{orderId}
+activate Order Service
+Order Service-->>Billing Service: order info
+deactivate Order Service
+alt Успешная оплата
+Billing Service->>Message Broker: publish
+activate Message Broker
+Note right of Message Broker: OrderPaymentCreated
+else Оплата не получилась
+Billing Service->>Message Broker: publish
+deactivate Billing Service
+Note right of Message Broker: OrderPaymentFailed
+end
+
+Message Broker-->>Order Service: consume
+deactivate Message Broker
+activate Order Service
+alt Заказ успешно оплачен
+Order Service->>Message Broker: publish
+activate Message Broker
+Note right of Message Broker: OrderPaid
+else Не удалось оплатить заказ
+Order Service->>Message Broker: publish
+deactivate Order Service
+Note right of Message Broker: OrderNotPaid
+end
+
+Message Broker-->>Notification Service: consume
+deactivate Message Broker
+activate Notification Service
+
+Notification Service->>Order Service: GET /order/{orderId}
+activate Order Service
+Order Service-->>Notification Service: order info
+deactivate Order Service
+
+Notification Service->>User Service: GET /user/{userId}
+activate User Service
+User Service-->>Notification Service: {email:"...", firstName: "...", lastName: "..."}
+deactivate User Service
+
+Notification Service-->>Notification Service: Send email
+deactivate Notification Service
+
+end
+

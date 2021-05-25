@@ -1,0 +1,2 @@
+Your app is here:
+http://{{ .Values.ingress.host }}{{ .Values.ingress.path }}

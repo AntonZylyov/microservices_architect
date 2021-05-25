@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myapp_v4.fullname" . }}-panel
+  labels:
+    app: {{ include "myapp_v4.fullname" . }}-app-panel
+spec:
+  selector:
+    app: {{ include "myapp_v4.fullname" . }}-app-panel
+  type: {{ .Values.service.type }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.userPanelPort }}
+      targetPort: web-panel
+      name: "http-panel"

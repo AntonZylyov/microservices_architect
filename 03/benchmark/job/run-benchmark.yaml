@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "myapp-benchmark"
+spec:
+  template:
+    metadata:
+      name: "myapp-benchmark"
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: antonzylyov/ab:v1
+          name: myapp-initdb-job
+          env:
+            - name: AB_REQUEST_COUNT
+              value: "100"
+            - name: AB_REQUEST_CONCURRENCY
+              value: "5"
+            - name: AB_TIMEOUT
+              value: "1800"
+            - name: AB_URL
+              value: "http://bit.homework/bitapp/zylyov/user/1"
+  backoffLimit: 1

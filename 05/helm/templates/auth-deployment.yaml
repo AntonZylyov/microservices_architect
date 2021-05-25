@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myapp_v5.fullname" . }}-auth
+  labels:
+    {{- include "myapp_v5.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+     matchLabels:
+        {{- include "myapp_v5.selectorLabels" . | nindent 8 }}
+  template:
+     metadata:
+        labels:
+          {{- include "myapp_v5.selectorLabels" . | nindent 10 }}
+     spec:
+        volumes:
+          - name: {{ include "myapp_v5.fullname" . }}-auth-shared-files
+            emptyDir: {}
+
+          - name: {{ include "myapp_v5.fullname" . }}-auth-nginx-config-volume
+            configMap:
+              name: {{ include "myapp_v5.fullname" . }}-auth-nginx-config
+
+        containers:
+          - image: {{ .Values.image.authAppRepository }}
+            name: {{ include "myapp_v5.fullname" . }}-auth-app
+            env:
+              - name: DATABASE_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                    key: DATABASE_HOST
+              - name: DATABASE_PORT
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                    key: DATABASE_PORT
+              - name: DATABASE_NAME
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                    key: DATABASE_NAME
+              - name: DATABASE_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                    key: DATABASE_USERNAME
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                    key: DATABASE_PASSWORD
+            volumeMounts:
+              - name: {{ include "myapp_v5.fullname" . }}-auth-shared-files
+                mountPath: /var/www/html
+            lifecycle:
+              postStart:
+                exec:
+                  command: ["/bin/sh", "-c", "cp -r /app/. /var/www/html"]
+
+          - image: nginx:1.7.9
+            name: {{ include "myapp_v5.fullname" . }}-auth-nginx
+            ports:
+              - name: auth-web
+                containerPort: 80
+            volumeMounts:
+              - name: {{ include "myapp_v5.fullname" . }}-auth-shared-files
+                mountPath: /var/www/html
+              - name: {{ include "myapp_v5.fullname" . }}-auth-nginx-config-volume
+                mountPath: /etc/nginx/conf.d/default.conf
+                subPath: default.conf
+#            livenessProbe:
+#                httpGet:
+#                  port: 80
+#                  path: /
+#                initialDelaySeconds: 10
+#                periodSeconds: 5
+#                timeoutSeconds: 2
+#            readinessProbe:
+#                httpGet:
+#                  port: 80
+#                  path: /health
+#                initialDelaySeconds: 10
+#                periodSeconds: 5

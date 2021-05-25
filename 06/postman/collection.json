@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "11781f7f-b829-48cc-8489-3c61d0bb25f4",
+		"name": "06_services_interaction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Регистрация пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8360c892-0098-421e-8ab3-5086d9ce11b2",
+						"exec": [
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "353d9a28-22a7-4f1b-8b80-3121b89fedde",
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"pm.collectionVariables.set('userId', responseJson.id);\r",
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"{{firstName}}\",\r\n    \"lastName\":\"{{lastName}}\",\r\n    \"email\":\"{{email}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/userService/user/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"userService",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Пополнить счет пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "aeb17bef-a59f-45ec-aecc-e947c22ec443",
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "db8e81ca-4261-4cf9-9f7b-8fdcccb668cb",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка пополнения счета\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.success).to.eql('ok');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/billingService/billing/deposit",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"billingService",
+						"billing",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Создать успешный заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ae04b470-0ef9-4d55-9afa-4ccbed5be4c2",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "893f5870-cce2-47e7-975d-f3cfba947a8b",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка создания успешного заказа\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.success).to.eql('ok');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/orderService/order/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orderService",
+						"order",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка отправки уведомления",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a5ea3771-659f-4b0a-9a63-2c2aa4369b18",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb76373d-b2b8-4885-b6ef-cd14e40f1957",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка уведомения об успещном заказе\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.type).to.eql('newOrderSuccess');\r",
+							"    pm.expect(responseJson.data.userId).to.eql(pm.variables.get('userId'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/notificationService/notification/last",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"notificationService",
+						"notification",
+						"last"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Создать неуспешный заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "80e9bb5c-188c-430c-9286-9ea5106655fe",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "93ecffdd-e228-41d3-baa3-0de372e61d09",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка создания успешного заказа\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.error).to.contain('Can not create order');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/orderService/order/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orderService",
+						"order",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка отправки уведомления2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "67ec917f-ce7a-48a6-b72d-37395f320617",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f4dc277-8a71-4503-9e51-8dea8114b727",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка уведомения об успещном заказе\", () => {\r",
+							"   const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.type).to.eql('newOrderFailure');\r",
+							"    pm.expect(responseJson.data.userId).to.eql(pm.variables.get('userId'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\":\"500\",\r\n    \"userId\":\"{{userId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/notificationService/notification/last",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"notificationService",
+						"notification",
+						"last"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "eb641a04-a2fa-4dc4-a352-2d3a88304349",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "986fe6f0-9489-4b99-92b9-366cee034b17",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "7fe621e3-3c45-457b-8c44-0ba875ea0c70",
+			"key": "host",
+			"value": "http://bit.homework"
+		},
+		{
+			"id": "f1a9a60a-8f17-4182-a591-4f960392a6ed",
+			"key": "email",
+			"value": ""
+		},
+		{
+			"id": "f518e02e-ed9e-4b01-83e6-0e71adf63426",
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"id": "18199d87-9a0e-4825-a317-511eac132371",
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"id": "51a92cf2-37ff-4800-8eb0-bb430a4a5135",
+			"key": "userId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

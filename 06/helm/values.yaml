@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  billingServiceRepository: antonzylyov/06_services_interaction:billing_service_v1
+  notificationServiceRepository: antonzylyov/06_services_interaction:notification_service_v1
+  orderServiceRepository: antonzylyov/06_services_interaction:order_service_v1
+  userServiceRepository: antonzylyov/06_services_interaction:user_service_v1
+
+#  testAppRepository: antonzylyov/apigateway_test_app:v2
+#  authAppRepository: antonzylyov/auth_app:v3
+
+ingress:
+  host: bit.homework
+  billingServicePath: /billingService
+  notificationServicePath: /notificationService
+  orderServicePath: /orderService
+  userServicePath: /userService
+
+#  testAppPath: /users/me
+#  authAppPath: /auth
+
+service:
+  type: NodePort
+  billingAppPort: 9000
+  notificationAppPort: 9001
+  orderAppPort: 9002
+  userAppPort: 9003
+
+#  testAppPort: 9000
+#  authAppPort: 9001
+
+mysql:
+  fullnameOverride: mysqldb
+  mysqlUser: zyzyzyz
+  mysqlPassword: mypasswd
+  mysqlDatabase: myapp
+  service:
+    port: 3306

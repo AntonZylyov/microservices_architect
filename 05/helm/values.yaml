@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  testAppRepository: antonzylyov/apigateway_test_app:v2
+  authAppRepository: antonzylyov/auth_app:v3
+
+ingress:
+  host: bit.homework
+  testAppPath: /users/me
+  authAppPath: /auth
+
+service:
+  type: NodePort
+  testAppPort: 9000
+  authAppPort: 9001
+
+mysql:
+  fullnameOverride: mysqldb
+  mysqlUser: zyzyzyz
+  mysqlPassword: mypasswd
+  mysqlDatabase: myapp
+  service:
+    port: 3306

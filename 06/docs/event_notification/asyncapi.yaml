@@ -1,0 +1,183 @@
+asyncapi: 2.0.0
+info:
+  title: Событийное взаимодействие с использованием брокера сообщений для нотификаций
+  version: '1.0.0'
+defaultContentType: application/json
+
+channels:
+  Gateway/UserCreateRequested:
+    publish:
+      message:
+        tags:
+          - name: user
+        name: UserCreateRequested
+        title: Запрос на создание пользователя
+        payload:
+          type: object
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+          required:
+            - email
+        examples:
+          - payload:
+              firstName: Иван
+              lastName: Иванов
+              email: ivanov@mail.ru
+
+  UserService/UserCreated:
+    publish:
+      message:
+        tags:
+          - name: user
+        name: UserCreated
+        title: Создан новый пользователь
+        payload:
+          type: object
+          properties:
+            userId:
+              type: integer
+        examples:
+          - payload:
+              userId: 1
+
+  BillingService/BillingAccountCreated:
+    publish:
+      message:
+        tags:
+          - name: billing
+        name: BillingAccountCreated
+        title: Создан аккаунт в сервисе биллинга
+        payload:
+          type: object
+          properties:
+            userId:
+              type: integer
+        examples:
+          - payload:
+              userId: 1
+
+  Gateway/OrderCreateRequested:
+    publish:
+      message:
+        tags:
+          - name: order
+        name: OrderCreateRequested
+        title: Запрос на создание заказа
+        payload:
+          type: object
+          properties:
+            userId:
+              type: integer
+            sum:
+              type: integer
+          required:
+            - userId
+            - sum
+        examples:
+          - payload:
+              userId: 1
+              sum: 100500
+
+  OrderService/OrderCreated:
+    publish:
+      message:
+        tags:
+          - name: order
+        name: OrderCreated
+        title: Создан новый заказ
+        payload:
+          type: object
+          properties:
+            orderId:
+              type: integer
+        examples:
+          - payload:
+              orderId: 1
+
+  OrderService/OrderPaymentRequested:
+    publish:
+      message:
+        tags:
+          - name: order
+        name: OrderPaymentRequested
+        title: Запрос на списание оплаты по заказу
+        payload:
+          type: object
+          properties:
+            orderId:
+              type: integer
+        examples:
+          - payload:
+              orderId: 1
+
+  BillingService/OrderPaymentCreated:
+    publish:
+      message:
+        tags:
+          - name: billing
+        name: OrderPaymentCreated
+        title: Оплата заказа проведена успешно
+        payload:
+          type: object
+          properties:
+            paymentId:
+              type: integer
+        examples:
+          - payload:
+              paymentId: 1
+
+  BillingService/OrderPaymentFailed:
+    publish:
+      message:
+        tags:
+          - name: billing
+        name: OrderPaymentFailed
+        title: Оплата заказа не выполнена
+        payload:
+          type: object
+          properties:
+            errorMessage:
+              type: string
+            errorCode:
+              type: integer
+        examples:
+          - payload:
+              errorMessage: Недостаточно средств на счете
+              errorCode: 101
+
+  OrderService/OrderPaid:
+    publish:
+      message:
+        tags:
+          - name: order
+        name: OrderPaid
+        title: Заказ оплачен
+        payload:
+          type: object
+          properties:
+            orderId:
+              type: integer
+        examples:
+          - payload:
+              orderId: 1
+
+  OrderService/OrderNotPaid:
+    publish:
+      message:
+        tags:
+          - name: order
+        name: OrderNotPaid
+        title: Заказ не оплачен
+        payload:
+          type: object
+          properties:
+            orderId:
+              type: integer
+        examples:
+          - payload:
+              orderId: 1

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: myapp-deployment
+spec:
+    replicas: 2
+    selector:
+       matchLabels:
+          app: myapp-v1
+    template:
+       metadata:
+          labels:
+             app: myapp-v1
+       spec:
+          volumes:
+            - name: shared-files
+              emptyDir: {}
+            
+            - name: nginx-config-volume
+              configMap:
+                name: myapp-nginx-config
+
+          containers:
+            - image: antonzylyov/myapp:v1
+              name: app
+              volumeMounts:
+                - name: shared-files
+                  mountPath: /var/www/html
+              lifecycle:
+                postStart:
+                  exec:
+                    command: ["/bin/sh", "-c", "cp -r /app/. /var/www/html"]
+            
+            - image: nginx:1.7.9
+              name: nginx
+              ports:
+                - name: web
+                  containerPort: 80
+              volumeMounts:
+                - name: shared-files
+                  mountPath: /var/www/html
+                - name: nginx-config-volume
+                  mountPath: /etc/nginx/conf.d/default.conf
+                  subPath: default.conf
+              livenessProbe:
+                  httpGet:
+                    port: 80
+                    path: /
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
+                  timeoutSeconds: 2
+              readinessProbe:
+                  httpGet:
+                    port: 80
+                    path: /health
+                  initialDelaySeconds: 10
+                  periodSeconds: 5

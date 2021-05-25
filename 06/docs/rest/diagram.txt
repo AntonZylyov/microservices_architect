@@ -1,0 +1,44 @@
+sequenceDiagram
+
+participant User
+participant User Service
+participant Billing Service
+participant Order Service
+participant Notification Service
+
+rect rgb(240, 240, 240)
+Note over User, Billing Service: Создание пользователя
+User->>User Service: POST /user/register
+activate User Service
+User Service->>Billing Service: POST /billing/createAccount {userId}
+activate Billing Service
+Billing Service-->>User Service: 201 CREATED
+deactivate Billing Service
+User Service-->>User: 201 CREATED
+deactivate User Service
+end
+
+rect rgb(240, 240, 240)
+Note over User, Notification Service: Оформление заказа
+User->>Order Service: POST /order/create
+activate Order Service
+
+Order Service->>Billing Service: POST /billing/withdraw {userId, sum}
+activate Billing Service
+Billing Service-->>Order Service: 201 OK
+deactivate Billing Service
+
+
+Order Service->>Notification Service: POST /notification/newOrderSuccess {userId, sum}
+activate Notification Service
+Notification Service->>User Service: GET /user/{userId}
+activate User Service
+User Service-->>Notification Service: {email: "...", firstName: "...", lastName: "..."}
+deactivate User Service
+Notification Service-->>Order Service: 201 OK
+deactivate Notification Service
+
+Order Service-->>User: 201 CREATED
+deactivate Order Service
+end
+

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myapp_v7.fullname" . }}-user
+spec:
+  selector:
+    {{- include "myapp_v7.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.userAppPort }}
+      targetPort: user-web

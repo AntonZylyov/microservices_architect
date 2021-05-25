@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "myapp_v5.fullname" . }}-auth-wait-mysql
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "myapp_v5.fullname" . }}-auth-wait-mysql
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: mysql:latest
+          name: {{ include "myapp_v5.fullname" . }}-auth-wait-mysql-job
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_PORT
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_NAME
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                  key: DATABASE_PASSWORD
+          command:
+            - sh
+            - "-c"
+            - |
+              until mysqladmin ping -h"$DATABASE_HOST" --port $DATABASE_PORT --silent;
+              do echo waiting for mysql $DATABASE_HOST:$DATABASE_PORT; sleep 2; done
+
+  backoffLimit: 1

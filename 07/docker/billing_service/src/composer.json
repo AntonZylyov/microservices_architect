@@ -1,0 +1,16 @@
+{
+  "name": "anton.zylyov/billing_service_v7",
+  "description": "Homework #7 billing_service",
+  "require": {
+    "slim/slim": "4.5.0",
+    "slim/psr7": "1.2.0",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "BillingServiceApp\\": "src/"
+    }
+  }
+}

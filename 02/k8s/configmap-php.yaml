@@ -1,0 +1,19 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: myapp-php-config
+data:
+  DATABASE_HOST: 'mysqldb'
+  DATABASE_PORT: '3306'
+  DATABASE_NAME: 'myapp_v2'
+  DATABASE_USERNAME: 'myuser'
+  DATABASE_PASSWORD: 'mypasswd'
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myapp-php-secret
+type: Opaque
+data:
+  DATABASE_USERNAME: bXl1c2Vy
+  DATABASE_PASSWORD: bXlwYXNzd2Q=

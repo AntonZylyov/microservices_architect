@@ -1,0 +1,2 @@
+Your app: http://{{ .Values.ingress.host }}{{ .Values.ingress.testAppPath }}
+Auth service: http://{{ .Values.ingress.host }}{{ .Values.ingress.authAppPath }}

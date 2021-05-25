@@ -1,0 +1,29 @@
+userApiReplicaCount: 1
+userPanelReplicaCount: 1
+
+image:
+  userApi: antonzylyov/myapp:v2
+  userPanel: antonzylyov/userpanel:v4
+
+ingress:
+  host: bit.homework
+  path: /bitapp/zylyov
+
+service:
+  type: NodePort
+  userApiPort: 9000
+  userPanelPort: 9001
+
+metrics:
+  serviceMonitor:
+    enabled: true
+
+mysql:
+  fullnameOverride: mysqldb
+  mysqlUser: zyzyzyz
+  mysqlPassword: mypasswd
+  mysqlDatabase: myapp
+  mysqlRootPassword: ""
+  service:
+    port: 3306
+

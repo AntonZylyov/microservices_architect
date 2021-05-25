@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myapp_v4.fullname" . }}
+  labels:
+    app: {{ include "myapp_v4.fullname" . }}-app
+spec:
+  selector:
+    app: {{ include "myapp_v4.fullname" . }}-app
+  type: {{ .Values.service.type }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.userApiPort }}
+      targetPort: web
+      name: "http-api"

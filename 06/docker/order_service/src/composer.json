@@ -1,0 +1,17 @@
+{
+  "name": "anton.zylyov/order_service_v6",
+  "description": "Homework #6 order_service",
+  "require": {
+    "slim/slim": "4.5.0",
+    "slim/psr7": "1.2.0",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "guzzlehttp/guzzle": "^7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "OrderServiceApp\\": "src/"
+    }
+  }
+}

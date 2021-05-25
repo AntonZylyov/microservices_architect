@@ -1,0 +1,20 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "myapp_v7.fullname" . }}-order-php-config
+data:
+  DATABASE_HOST: {{ .Values.mysql.fullnameOverride | quote }}
+  DATABASE_PORT: {{ .Values.mysql.service.port | quote }}
+  DATABASE_NAME: {{ .Values.mysql.mysqlDatabase | quote }}
+  BILLING_SERVICE_HOST: {{ include "myapp_v7.fullname" . }}-billing:{{ .Values.service.billingAppPort }}
+  NOTIFICATION_SERVICE_HOST: {{ include "myapp_v7.fullname" . }}-notification:{{ .Values.service.notificationAppPort }}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "myapp_v7.fullname" . }}-order-php-secret
+type: Opaque
+data:
+  DATABASE_USERNAME: {{ .Values.mysql.mysqlUser | b64enc | quote }}
+  DATABASE_PASSWORD: {{ .Values.mysql.mysqlPassword | b64enc | quote }}

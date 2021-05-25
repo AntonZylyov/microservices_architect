@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  billingServiceRepository: antonzylyov/07_idempotence:billing_service_v1
+  notificationServiceRepository: antonzylyov/07_idempotence:notification_service_v1
+  orderServiceRepository: antonzylyov/07_idempotence:order_service_v5
+  userServiceRepository: antonzylyov/07_idempotence:user_service_v1
+
+ingress:
+  host: bit.homework
+  billingServicePath: /billingService
+  notificationServicePath: /notificationService
+  orderServicePath: /orderService
+  userServicePath: /userService
+
+
+service:
+  type: NodePort
+  billingAppPort: 9000
+  notificationAppPort: 9001
+  orderAppPort: 9002
+  userAppPort: 9003
+
+mysql:
+  fullnameOverride: mysqldb
+  mysqlUser: zyzyzyz
+  mysqlPassword: mypasswd
+  mysqlDatabase: myapp
+  service:
+    port: 3306

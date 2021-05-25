@@ -1,0 +1,22 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "myapp_v4.fullname" . }}-nginx-config
+data:
+  default.conf: |
+    server {
+        listen 0.0.0.0:80;
+        root /var/www/html/public;
+        index index.php index.html index.htm;
+        
+        location / {
+                try_files $uri $uri/ /index.php;
+        }
+
+        location ~ \.php$ {
+            include fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+        }
+    }

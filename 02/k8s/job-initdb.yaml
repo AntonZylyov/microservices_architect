@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "myapp-initdb"
+spec:
+  template:
+    metadata:
+      name: "myapp-initdb"
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: antonzylyov/myapp:v2
+          name: myapp-initdb-job
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp-php-config
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp-php-config
+                  key: DATABASE_PORT
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp-php-config
+                  key: DATABASE_NAME
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-php-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-php-secret
+                  key: DATABASE_PASSWORD
+          command:
+            - "php"
+            - "./migrations/001_create_users_table.php"
+
+  backoffLimit: 1

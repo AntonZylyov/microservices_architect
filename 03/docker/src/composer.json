@@ -1,0 +1,17 @@
+{
+  "name": "anton.zylyov/myapp_v3",
+  "description": "Homework #3",
+  "require": {
+    "slim/slim": "4.5.0",
+    "slim/psr7": "1.2.0",
+    "endclothing/prometheus_client_php": "1.0.1",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyApp\\": "src/"
+    }
+  }
+}

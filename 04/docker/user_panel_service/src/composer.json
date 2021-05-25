@@ -1,0 +1,15 @@
+{
+  "name": "anton.zylyov/myapp_user_panel_v4",
+  "description": "Homework #4 (user panel)",
+  "require": {
+    "slim/slim": "4.5.0",
+    "slim/psr7": "1.2.0",
+    "slim/php-view": "3.0.0",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyApp\\": "src/"
+    }
+  }
+}

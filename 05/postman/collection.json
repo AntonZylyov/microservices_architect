@@ -1,0 +1,477 @@
+{
+	"info": {
+		"_postman_id": "dbeb5bec-ff27-4bb2-8012-68235b357c0d",
+		"name": "v5_apigateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Проверка запроса от неавторизованного пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "782d7bdc-4a4e-407f-8043-a330d3c4d348",
+						"exec": [
+							"pm.test(\"Проверка запроса от неавторизованного пользователя\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.eql('Please login!');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/users/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Регистрация пользователя 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d7664478-dcd9-4068-99a9-a46c67e40848",
+						"exec": [
+							"pm.collectionVariables.set(\"login\", pm.variables.replaceIn('{{$guid}}'));\r",
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd6e30f4-795e-489c-a2ee-cd42ad479093",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.login).to.eql(pm.variables.get('login'));\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\",\r\n    \"firstName\":\"{{firstName}}\",\r\n    \"lastName\":\"{{lastName}}\",\r\n    \"email\":\"{{email}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/auth/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка запроса от неавторизованного пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5fa5e3c-9675-4d6e-b5b6-066ed4355ad8",
+						"exec": [
+							"pm.test(\"Проверка запроса от неавторизованного пользователя\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.eql('Please login!');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/users/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Авторизация пользователя 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "481acbe7-8b19-4881-b0f3-db1377b34490",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fa1a7a3c-2908-461e-ab78-400f03848a71",
+						"exec": [
+							"pm.collectionVariables.set(\"sessionId\", pm.cookies.get('session'));\r",
+							"\r",
+							"pm.test(\"Проверка авторизации\", () => {\r",
+							"    pm.expect(pm.response.text()).empty\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка запроса от авторизованного пользователя 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f6dcc6f-2b28-415a-a34d-5f610f4d99e5",
+						"exec": [
+							"pm.test(\"Проверка данных пользователя\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.name).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "session={{sessionId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Разлогин пользователя 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61f8b0ed-10a5-4a3f-8550-84ca79a2630f",
+						"exec": [
+							"pm.collectionVariables.set(\"sessionId\", pm.cookies.get('session'));\r",
+							"\r",
+							"pm.test(\"Проверка авторизации\", () => {\r",
+							"    pm.expect(pm.response.text()).empty\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "session={{sessionId}}"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/auth/logout",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Регистрация пользователя 2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a7c51add-027a-4202-b805-74d905aaa61a",
+						"exec": [
+							"pm.collectionVariables.set(\"login\", pm.variables.replaceIn('{{$guid}}'));\r",
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3e6401b-ac0d-432a-bd1a-591ee9956479",
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.login).to.eql(pm.variables.get('login'));\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\",\r\n    \"firstName\":\"{{firstName}}\",\r\n    \"lastName\":\"{{lastName}}\",\r\n    \"email\":\"{{email}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/auth/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Авторизация пользователя 2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1a4e5c39-41dc-400f-bd47-8e86bacf2729",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "80f2c484-8828-4acf-8907-85cf5824abdc",
+						"exec": [
+							"pm.collectionVariables.set(\"sessionId\", pm.cookies.get('session'));\r",
+							"\r",
+							"pm.test(\"Проверка авторизации\", () => {\r",
+							"    pm.expect(pm.response.text()).empty\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка запроса от авторизованного пользователя 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bdccabd2-00a8-4184-bc5a-9c135650b663",
+						"exec": [
+							"pm.test(\"Проверка данных пользователя\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.name).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "session={{sessionId}}"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1575a5db-e29e-4330-8e19-bbb29b91f590",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "24a412e8-bc28-4fba-987d-a584335bfecd",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "787c6ec3-3c40-45e5-a858-b5a37b09046a",
+			"key": "host",
+			"value": "http://bit.homework"
+		},
+		{
+			"id": "79fa2dd2-cd53-46c9-bf20-1d3456393b48",
+			"key": "email",
+			"value": ""
+		},
+		{
+			"id": "6c251457-1d11-4f67-bcc1-20687e8ddef1",
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"id": "4921eeaf-35fe-4c1d-b1de-abe179e4673f",
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"id": "07c67a1c-c98e-42b8-8b4a-74b1ec999dea",
+			"key": "login",
+			"value": ""
+		},
+		{
+			"id": "ceebdfba-95b3-4a92-9367-09fc35a7821b",
+			"key": "password",
+			"value": ""
+		},
+		{
+			"id": "988c838a-d0ed-49a5-b918-5f39d2155c68",
+			"key": "sessionId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

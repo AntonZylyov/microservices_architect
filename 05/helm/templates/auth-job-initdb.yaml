@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "myapp_v5.fullname" . }}-auth-initdb
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "myapp_v5.fullname" . }}-auth-initdb
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: {{ .Values.image.authAppRepository }}
+          name: {{ include "myapp_v5.fullname" . }}-auth-initdb-job
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_PORT
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-config
+                  key: DATABASE_NAME
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "myapp_v5.fullname" . }}-auth-php-secret
+                  key: DATABASE_PASSWORD
+          command:
+            - "php"
+            - "./migrations/001_create_tables.php"
+
+  backoffLimit: 1

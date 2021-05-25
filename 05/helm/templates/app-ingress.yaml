@@ -1,0 +1,22 @@
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "myapp_v5.fullname" . }}-ingress-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-url: "http://{{ include "myapp_v5.fullname" . }}-auth.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.authAppPort }}/authorize"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/auth/signin"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-UserId,X-UserEmail,X-UserFirstName,X-UserLastName"
+spec:
+  rules:
+    - host:  {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.testAppPath }}($|/)(.*)
+            backend:
+              serviceName: {{ include "myapp_v5.fullname" . }}-app
+              servicePort: {{ .Values.service.testAppPort }}
