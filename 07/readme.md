@@ -1,6 +1,6 @@
 # Идемпотетность
 
-На основе [предыдущей домашки](https://github.com/AntonZylyov/06_services_interaction) сделан вариант
+На основе [предыдущей домашки](https://github.com/AntonZylyov/microservices_architect/tree/master/06) сделан вариант
 с идемпотентным оформлением заказа. 
 
 Идемпотентность реализована на основе заголовков `X-Etag` / `X-If-Match` 
