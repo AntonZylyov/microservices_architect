@@ -1,0 +1,4 @@
+User service: http://{{ .Values.ingress.host }}{{ .Values.ingress.userServicePath }}
+Order service: http://{{ .Values.ingress.host }}{{ .Values.ingress.orderServicePath }}
+Billing service: http://{{ .Values.ingress.host }}{{ .Values.ingress.billingServicePath }}
+Notification service: http://{{ .Values.ingress.host }}{{ .Values.ingress.notificationServicePath }}

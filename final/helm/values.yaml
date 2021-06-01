@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  authServiceRepository: antonzylyov/microservices_architect_final:auth_service_latest
+  billingServiceRepository: antonzylyov/microservices_architect_final:billing_service_latest
+  clientOrchestratorRepository: antonzylyov/microservices_architect_final:client_orchestrator_latest
+  clientServiceRepository: antonzylyov/microservices_architect_final:client_service_latest
+  notificationServiceRepository: antonzylyov/microservices_architect_final:notification_service_latest
+  orderOrchestratorRepository: antonzylyov/microservices_architect_final:order_orchestrator_latest
+  orderServiceRepository: antonzylyov/microservices_architect_final:order_service_latest
+
+ingress:
+  host: bit.homework
+  authServicePath: /api/auth
+  clientServicePath: /dev/clientService
+  notificationServicePath: /dev/notificationService
+  orderServicePath: /dev/orderService
+  billingServicePath: /dev/billingService
+  clientOrchestratorPath: /api/client
+  orderOrchestratorPath: /api/order
+
+service:
+  type: NodePort
+  authAppPort: 9001
+  clientAppPort: 9002
+  notificationAppPort: 9003
+  orderAppPort: 9004
+  billingAppPort: 9005
+  clientOrchestratorPort: 9006
+  orderOrchestratorPort: 9007
+
+mysql:
+  fullnameOverride: mysqldb
+  mysqlUser: myuser
+  mysqlPassword: mypasswd
+  mysqlDatabase: myapp
+  service:
+    port: 3306
