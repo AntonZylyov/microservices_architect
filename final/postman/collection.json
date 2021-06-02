@@ -1,0 +1,489 @@
+{
+	"info": {
+		"_postman_id": "bcb51587-e88c-481b-ba81-3f3b3d2c267c",
+		"name": "microservice_finals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Регистрация пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"login\", pm.variables.replaceIn('{{$guid}}'));\r",
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"clientId\", responseJson.clientId);\r",
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    pm.expect(responseJson.login).to.eql(pm.variables.get('login'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\",\r\n    \"firstName\":\"{{firstName}}\",\r\n    \"lastName\":\"{{lastName}}\",\r\n    \"email\":\"{{email}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/client/register_client",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"client",
+						"register_client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение данных о зарегистрированном клиенте",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/dev/clientService/client/{{clientId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"dev",
+						"clientService",
+						"client",
+						"{{clientId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение данных об уведомлении про нового пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.type).to.eql('newClientCreated');\r",
+							"    pm.expect(responseJson.data.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.data.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.data.email).to.eql(pm.variables.get('email'));\r",
+							"    pm.expect(responseJson.data.login).to.eql(pm.variables.get('login'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/dev/notificationService/notification/last",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"dev",
+						"notificationService",
+						"notification",
+						"last"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Авторизация пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"sessionId\", pm.cookies.get('session'));\r",
+							"\r",
+							"pm.test(\"Проверка авторизации\", () => {\r",
+							"    pm.expect(pm.response.json().status).to.eql('OK');\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"{{login}}\",\r\n    \"password\":\"{{password}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Создание заказа (фейлится потому что денег нет)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Создание заказа фейлится потому что денег нет\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.error).not.empty;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "session={{sessionId}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\": 100000\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/order/create_order",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"create_order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Пополнение баланса",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Проверка пополнения счета\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.clientId).to.eql(pm.variables.get('clientId'));\r",
+							"    pm.expect(responseJson.balance).to.eql(100500);\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientId\":\"{{clientId}}\",\r\n    \"sum\": 100500\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/dev/billingService/billing/deposit",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"dev",
+						"billingService",
+						"billing",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Создание заказа",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Проверка успешности созданного заказа\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.success).to.eql('ok');\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "session={{sessionId}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sum\": 1000\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/order/create_order",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"create_order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение данных об уведомлении про новый заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Проверка данных зареганного\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.type).to.eql('newOrderCreated');\r",
+							"     pm.expect(responseJson.data.sum).to.eql(1000);\r",
+							"    pm.expect(responseJson.data.client.firstName).to.eql(pm.variables.get('firstName'));\r",
+							"    pm.expect(responseJson.data.client.lastName).to.eql(pm.variables.get('lastName'));\r",
+							"    pm.expect(responseJson.data.client.email).to.eql(pm.variables.get('email'));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/dev/notificationService/notification/last",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"dev",
+						"notificationService",
+						"notification",
+						"last"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://bit.homework"
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "sessionId",
+			"value": ""
+		},
+		{
+			"key": "clientId",
+			"value": ""
+		}
+	]
+}
