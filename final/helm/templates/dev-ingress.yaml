@@ -16,14 +16,9 @@ spec:
     - host:  {{ .Values.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.authServicePath }}($|/)(.*)
-            backend:
-              serviceName: {{ include "myapp.fullname" . }}-auth
-              servicePort: {{ .Values.service.authAppPort }}
-
           - path: {{ .Values.ingress.clientServicePath }}($|/)(.*)
             backend:
-              serviceName: {{ include "myapp.fullname" . }}-auth
+              serviceName: {{ include "myapp.fullname" . }}-client
               servicePort: {{ .Values.service.clientAppPort }}
 
           - path: {{ .Values.ingress.notificationServicePath }}($|/)(.*)
@@ -40,13 +35,3 @@ spec:
             backend:
               serviceName: {{ include "myapp.fullname" . }}-billing
               servicePort: {{ .Values.service.billingAppPort }}
-
-          - path: {{ .Values.ingress.clientOrchestratorPath }}($|/)(.*)
-            backend:
-              serviceName: {{ include "myapp.fullname" . }}-clientorch
-              servicePort: {{ .Values.service.clientOrchestratorPort }}
-
-          - path: {{ .Values.ingress.orderOrchestratorPath }}($|/)(.*)
-            backend:
-              serviceName: {{ include "myapp.fullname" . }}-orderorch
-              servicePort: {{ .Values.service.orderOrchestratorPort }}

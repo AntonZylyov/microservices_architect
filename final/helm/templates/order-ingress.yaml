@@ -1,0 +1,26 @@
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+  {{- else -}}
+apiVersion: extensions/v1beta1
+  {{- end }}
+kind: Ingress
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "myapp.fullname" . }}-ingress-order
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-url: "http://{{ include "myapp.fullname" . }}-auth.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.authAppPort }}/authorize"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/auth/signin"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-UserId,X-ClientId"
+  labels:
+    {{- include "myapp.labels" . | nindent 4 }}
+spec:
+  rules:
+    - host:  {{ .Values.ingress.host }}
+      http:
+        paths:
+
+          - path: {{ .Values.ingress.orderOrchestratorPath }}($|/)(.*)
+            backend:
+              serviceName: {{ include "myapp.fullname" . }}-orderorch
+              servicePort: {{ .Values.service.orderOrchestratorPort }}
