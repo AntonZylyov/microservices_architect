@@ -13,13 +13,13 @@ class ClientService extends Service
 		return $this->config->getClientServiceHost();
 	}
 
-	public function createClient(string $lastName, string $firstName, string $email): Result
+	public function createClient(string $firstName, string $lastName, string $email): Result
 	{
 		return $this->request(
 			'/client/add',
 			[
-				'lastName' => $lastName,
 				'firstName' => $firstName,
+				'lastName' => $lastName,
 				'email' => $email,
 			],
 			HttpMethod::POST
