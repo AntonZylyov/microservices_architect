@@ -1,3 +1,6 @@
+# Архитектор программного обеспечения
+Квинтэссенция всех [предыдущих домашек](homeworks.md) объединенная в одном прекрасном наборе микросервисов.
+
 ## Запуск
 
 ### Запуск мониторинга
@@ -69,11 +72,11 @@ helm install app ./helm -n myapp
 
 Можно импортировать [коллекцию запросов](postman/collection.json) в Postman, запустить и убедиться что все хорошо:
 
-![Postman](docs/postman.png)
+![Postman](final/docs/postman.png)
 
 И заодно в графане посмотреть на графики:
 
-![Postman](docs/grafana.png)
+![Postman](final/docs/grafana.png)
 
 ## Архитектура
 
