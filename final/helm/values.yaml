@@ -34,5 +34,10 @@ mysql:
   mysqlUser: myuser
   mysqlPassword: mypasswd
   mysqlDatabase: myapp
+  mysqlRootPassword: ""
   service:
     port: 3306
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
