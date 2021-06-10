@@ -8,7 +8,7 @@
 
 [Файл с описанием rest интерфейсов](docs/rest/openapi.yaml)
 
-[Посмотреть интерфейсы в Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/AntonZylyov/06_services_interaction/master/docs/rest/openapi.yaml)
+[Посмотреть интерфейсы в Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/AntonZylyov/microservices_architect/master/06/docs/rest/openapi.yaml)
 
 ## Событийное взаимодействие с использованием брокера сообщений для нотификаций
 
@@ -18,11 +18,11 @@
 
 [Файл с описанием rest интерфейсов](docs/event_notification/openapi.yaml)
 
-[Посмотреть rest интерфейсы в Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/AntonZylyov/06_services_interaction/master/docs/event_notification/openapi.yaml)
+[Посмотреть rest интерфейсы в Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/AntonZylyov/microservices_architect/master/06/docs/event_notification/openapi.yaml)
 
 [Файл с описанием async интерфейсов](docs/event_notification/asyncapi.yaml)
 
-[Посмотреть async интерфейсы в AsyncAPI Playground](https://playground.asyncapi.io/?url=https://raw.githubusercontent.com/AntonZylyov/06_services_interaction/master/docs/event_notification/asyncapi.yaml)
+[Посмотреть async интерфейсы в AsyncAPI Playground](https://playground.asyncapi.io/?url=https://raw.githubusercontent.com/AntonZylyov/microservices_architect/master/06/docs/event_notification/asyncapi.yaml)
 
 
 ## Event Collaboration с использованием брокера сообщений
@@ -33,7 +33,7 @@
 
 [Файл с описанием async интерфейсов](docs/event_collaboration/asyncapi.yaml)
 
-[Посмотреть async интерфейсы в AsyncAPI Playground](https://playground.asyncapi.io/?url=https://raw.githubusercontent.com/AntonZylyov/06_services_interaction/master/docs/event_collaboration/asyncapi.yaml)
+[Посмотреть async интерфейсы в AsyncAPI Playground](https://playground.asyncapi.io/?url=https://raw.githubusercontent.com/AntonZylyov/microservices_architect/master/06/docs/event_collaboration/asyncapi.yaml)
 
 
 
