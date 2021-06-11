@@ -1,22 +1,22 @@
 openapi: 3.0.0
 info:
-  title: Архитектор программного обеспечения. Итоговый набор микросервисов
+  title: РђСЂС…РёС‚РµРєС‚РѕСЂ РїСЂРѕРіСЂР°РјРјРЅРѕРіРѕ РѕР±РµСЃРїРµС‡РµРЅРёСЏ. РС‚РѕРіРѕРІС‹Р№ РЅР°Р±РѕСЂ РјРёРєСЂРѕСЃРµСЂРІРёСЃРѕРІ
   version: 1.0.0
 tags:
   - name: Auth service
-    description: Сервис работы с пользователеми
+    description: РЎРµСЂРІРёСЃ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРјРё
   - name: Billing service
-    description: Сервис для работы с оплатами
+    description: РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕРїР»Р°С‚Р°РјРё
   - name: Client service
-    description: Сервис работы с клиентами
+    description: РЎРµСЂРІРёСЃ СЂР°Р±РѕС‚С‹ СЃ РєР»РёРµРЅС‚Р°РјРё
   - name: Order service
-    description: Сервис заказов
+    description: РЎРµСЂРІРёСЃ Р·Р°РєР°Р·РѕРІ
   - name: Notification service
-    description: Сервис уведомлений
+    description: РЎРµСЂРІРёСЃ СѓРІРµРґРѕРјР»РµРЅРёР№
   - name: Client orchestrator
-    description: Оркестратор создания клиента
+    description: РћСЂРєРµСЃС‚СЂР°С‚РѕСЂ СЃРѕР·РґР°РЅРёСЏ РєР»РёРµРЅС‚Р°
   - name: Order orchestrator
-    description: Оркестратор создания заказа
+    description: РћСЂРєРµСЃС‚СЂР°С‚РѕСЂ СЃРѕР·РґР°РЅРёСЏ Р·Р°РєР°Р·Р°
 
 
 paths:
@@ -24,7 +24,7 @@ paths:
     get:
       tags:
         - "Auth service"
-      summary: Сервис скажет "I am auth service"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am auth service"
       operationId: authServiceHello
       responses:
         '200':
@@ -34,68 +34,68 @@ paths:
     get:
       tags:
         - "Auth service"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: authServiceHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /api/auth/authorize:
     post:
       tags:
         - "Auth service"
-      summary: Проверка авторизации для Api Gateway
+      summary: РџСЂРѕРІРµСЂРєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё РґР»СЏ Api Gateway
       operationId: authServiceAuthorize
       responses:
         '200':
-          description: В куке приходит идентификатор сессии, если с ним все хорошо, ставятся заголовки X-UserId и X-ClientId
+          description: Р’ РєСѓРєРµ РїСЂРёС…РѕРґРёС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё, РµСЃР»Рё СЃ РЅРёРј РІСЃРµ С…РѕСЂРѕС€Рѕ, СЃС‚Р°РІСЏС‚СЃСЏ Р·Р°РіРѕР»РѕРІРєРё X-UserId Рё X-ClientId
 
   /api/auth/login:
     post:
       tags:
         - "Auth service"
-      summary: Авторизация
+      summary: РђРІС‚РѕСЂРёР·Р°С†РёСЏ
       operationId: authServiceLogin
       responses:
         '200':
-          description: "Авторизация: по логину и паролю ставится сессионная кука"
+          description: "РђРІС‚РѕСЂРёР·Р°С†РёСЏ: РїРѕ Р»РѕРіРёРЅСѓ Рё РїР°СЂРѕР»СЋ СЃС‚Р°РІРёС‚СЃСЏ СЃРµСЃСЃРёРѕРЅРЅР°СЏ РєСѓРєР°"
 
   /api/auth/logout:
     get:
       tags:
         - "Auth service"
-      summary: Логаут
+      summary: Р›РѕРіР°СѓС‚
       operationId: authServiceLogout
       responses:
         '200':
-          description: Очищается кука с сессией
+          description: РћС‡РёС‰Р°РµС‚СЃСЏ РєСѓРєР° СЃ СЃРµСЃСЃРёРµР№
 
   /api/auth/signin:
     get:
       tags:
         - "Auth service"
-      summary: Сюда Api Gateway редиректит если нет авторизации
+      summary: РЎСЋРґР° Api Gateway СЂРµРґРёСЂРµРєС‚РёС‚ РµСЃР»Рё РЅРµС‚ Р°РІС‚РѕСЂРёР·Р°С†РёРё
       operationId: authServiceSignin
       responses:
         '200':
-          description: Страница с предложением авторизоваться
+          description: РЎС‚СЂР°РЅРёС†Р° СЃ РїСЂРµРґР»РѕР¶РµРЅРёРµРј Р°РІС‚РѕСЂРёР·РѕРІР°С‚СЊСЃСЏ
 
   /api/auth/user/register:
     post:
       tags:
         - "Auth service"
-      summary: Регистрация пользователя
+      summary: Р РµРіРёСЃС‚СЂР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
       operationId: authServiceRegister
       responses:
         '200':
-          description: Регистрация пользователя
+          description: Р РµРіРёСЃС‚СЂР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 
 
   /dev/billingService:
     get:
       tags:
         - "Billing service"
-      summary: Сервис скажет "I am billing service"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am billing service"
       operationId: billingServiceHello
       responses:
         '200':
@@ -104,66 +104,66 @@ paths:
     get:
       tags:
         - "Billing service"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: billingServiceHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /dev/billingService/billing/createAccount:
     post:
       tags:
         - "Billing service"
-      summary: Создание новой учетки в системе оплат
+      summary: РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕР№ СѓС‡РµС‚РєРё РІ СЃРёСЃС‚РµРјРµ РѕРїР»Р°С‚
       operationId: billingServiceCreateAccount
       responses:
         '200':
-          description: Учетка успешно создана
+          description: РЈС‡РµС‚РєР° СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅР°
 
   "/dev/billingService/billing/{clientId}":
     get:
       tags:
         - "Billing service"
-      summary: Информация о счете
+      summary: РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‡РµС‚Рµ
       operationId: billingServiceAccountInfo
       parameters:
         - name: clientId
           in: path
-          description: ID клиента
+          description: ID РєР»РёРµРЅС‚Р°
           required: true
           schema:
             type: integer
             format: int64
       responses:
         '200':
-          description: Информация о счете
+          description: РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‡РµС‚Рµ
 
   /dev/billingService/billing/withdraw:
     post:
       tags:
         - "Billing service"
-      summary: Списание денег
+      summary: РЎРїРёСЃР°РЅРёРµ РґРµРЅРµРі
       operationId: billingServiceWithdraw
       responses:
         '200':
-          description: Деньгм списаны
+          description: Р”РµРЅСЊРіРј СЃРїРёСЃР°РЅС‹
 
   /dev/billingService/billing/deposit:
     post:
       tags:
         - "Billing service"
-      summary: Зачисление денег
+      summary: Р—Р°С‡РёСЃР»РµРЅРёРµ РґРµРЅРµРі
       operationId: billingServiceDeposit
       responses:
         '200':
-          description: Деньги зачислены
+          description: Р”РµРЅСЊРіРё Р·Р°С‡РёСЃР»РµРЅС‹
 
 
   /dev/clientService:
     get:
       tags:
         - "Client service"
-      summary: Сервис скажет "I am client service"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am client service"
       operationId: clientServiceHello
       responses:
         '200':
@@ -172,66 +172,66 @@ paths:
     get:
       tags:
         - "Client service"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: clientServiceHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /dev/clientService/client/add:
     post:
       tags:
         - "Client service"
-      summary: Создание нового клиента
+      summary: РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РєР»РёРµРЅС‚Р°
       operationId: clientServiceClientAdd
       responses:
         '200':
-          description: Клиент успешно создан
+          description: РљР»РёРµРЅС‚ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ
 
   "/dev/clientService/client/{clientId}":
     get:
       tags:
         - "Client service"
-      summary: Информация о счете
+      summary: РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‡РµС‚Рµ
       operationId: clientServiceClientInfo
       parameters:
         - name: clientId
           in: path
-          description: ID клиента
+          description: ID РєР»РёРµРЅС‚Р°
           required: true
           schema:
             type: integer
             format: int64
       responses:
         '200':
-          description: Информация о клиенте
+          description: РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєР»РёРµРЅС‚Рµ
 
   /dev/clientService/client/approve:
     post:
       tags:
         - "Client service"
-      summary: Подтверждение клиента в процессе саги
+      summary: РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РєР»РёРµРЅС‚Р° РІ РїСЂРѕС†РµСЃСЃРµ СЃР°РіРё
       operationId: clientServiceClientApprove
       responses:
         '200':
-          description: Клиент подтвержден
+          description: РљР»РёРµРЅС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅ
 
   /dev/clientService/client/reject:
     post:
       tags:
         - "Client service"
-      summary: Удаление клиента в процессе саги
+      summary: РЈРґР°Р»РµРЅРёРµ РєР»РёРµРЅС‚Р° РІ РїСЂРѕС†РµСЃСЃРµ СЃР°РіРё
       operationId: clientServiceClientReject
       responses:
         '200':
-          description: Клиент удален
+          description: РљР»РёРµРЅС‚ СѓРґР°Р»РµРЅ
 
 
   /dev/notificationService:
     get:
       tags:
         - "Notification service"
-      summary: Сервис скажет "I am notification service"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am notification service"
       operationId: notificationServiceHello
       responses:
         '200':
@@ -240,48 +240,48 @@ paths:
     get:
       tags:
         - "Notification service"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: notificationServiceHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /dev/notificationService/notification/last:
     get:
       tags:
         - "Notification service"
-      summary: Получить последнее отправленное уведомление
+      summary: РџРѕР»СѓС‡РёС‚СЊ РїРѕСЃР»РµРґРЅРµРµ РѕС‚РїСЂР°РІР»РµРЅРЅРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ
       operationId: notificationServiceLast
       responses:
         '200':
-          description: Последнее отправленное уведомление
+          description: РџРѕСЃР»РµРґРЅРµРµ РѕС‚РїСЂР°РІР»РµРЅРЅРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ
 
   /dev/notificationService/notify/newClientCreated:
     post:
       tags:
         - "Notification service"
-      summary: Уведомление о новом клиенте
+      summary: РЈРІРµРґРѕРјР»РµРЅРёРµ Рѕ РЅРѕРІРѕРј РєР»РёРµРЅС‚Рµ
       operationId: notificationServiceNewClientCreated
       responses:
         '200':
-          description: Уведомление о новом клиенте
+          description: РЈРІРµРґРѕРјР»РµРЅРёРµ Рѕ РЅРѕРІРѕРј РєР»РёРµРЅС‚Рµ
 
   /dev/notificationService/notify/newOrderCreated:
     post:
       tags:
         - "Notification service"
-      summary: Уведомление о новом заказе
+      summary: РЈРІРµРґРѕРјР»РµРЅРёРµ Рѕ РЅРѕРІРѕРј Р·Р°РєР°Р·Рµ
       operationId: notificationServiceNewOrderCreated
       responses:
         '200':
-          description: Уведомление о новом заказе
+          description: РЈРІРµРґРѕРјР»РµРЅРёРµ Рѕ РЅРѕРІРѕРј Р·Р°РєР°Р·Рµ
 
 
   /dev/orderService:
     get:
       tags:
         - "Order service"
-      summary: Сервис скажет "I am order service"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am order service"
       operationId: orderServiceHello
       responses:
         '200':
@@ -290,48 +290,48 @@ paths:
     get:
       tags:
         - "Order service"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: orderServiceHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /dev/orderService/order/create:
     post:
       tags:
         - "Order service"
-      summary: Создание нового заказа
+      summary: РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ Р·Р°РєР°Р·Р°
       operationId: orderServiceCreateOreder
       responses:
         '200':
-          description: Заказ успешно создан
+          description: Р—Р°РєР°Р· СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ
 
   /dev/clientService/order/confirm:
     post:
       tags:
         - "Order service"
-      summary: Подтверждение заказа в процессе саги
+      summary: РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Р·Р°РєР°Р·Р° РІ РїСЂРѕС†РµСЃСЃРµ СЃР°РіРё
       operationId: orderServiceOrderConfirm
       responses:
         '200':
-          description: Заказа подтвержден
+          description: Р—Р°РєР°Р·Р° РїРѕРґС‚РІРµСЂР¶РґРµРЅ
 
   /dev/clientService/order/reject:
     post:
       tags:
         - "Order service"
-      summary: Удаление заказа в процессе саги
+      summary: РЈРґР°Р»РµРЅРёРµ Р·Р°РєР°Р·Р° РІ РїСЂРѕС†РµСЃСЃРµ СЃР°РіРё
       operationId: orderServiceOrderReject
       responses:
         '200':
-          description: Заказа удален
+          description: Р—Р°РєР°Р·Р° СѓРґР°Р»РµРЅ
 
 
   /api/client:
     get:
       tags:
         - "Client orchestrator"
-      summary: Сервис скажет "I am client orchestrator"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am client orchestrator"
       operationId: clientOrchestratorHello
       responses:
         '200':
@@ -340,28 +340,28 @@ paths:
     get:
       tags:
         - "Client orchestrator"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: clientOrchestratorHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /api/client/register_client:
     post:
       tags:
         - "Client orchestrator"
-      summary: Оркестрация для создания нового клиента
+      summary: РћСЂРєРµСЃС‚СЂР°С†РёСЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РЅРѕРІРѕРіРѕ РєР»РёРµРЅС‚Р°
       operationId: clientOrchestratorRegisterClient
       responses:
         '200':
-          description: Клиент успешно создан
+          description: РљР»РёРµРЅС‚ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ
 
 
   /api/order:
     get:
       tags:
         - "Client orchestrator"
-      summary: Сервис скажет "I am order orchestrator"
+      summary: РЎРµСЂРІРёСЃ СЃРєР°Р¶РµС‚ "I am order orchestrator"
       operationId: orderOrchestratorHello
       responses:
         '200':
@@ -370,19 +370,19 @@ paths:
     get:
       tags:
         - "Client orchestrator"
-      summary: Проверка что сервис живой
+      summary: РџСЂРѕРІРµСЂРєР° С‡С‚Рѕ СЃРµСЂРІРёСЃ Р¶РёРІРѕР№
       operationId: orderOrchestratorHealth
       responses:
         '200':
-          description: Сюда ходит kubernates, проверяя что pod не сдох
+          description: РЎСЋРґР° С…РѕРґРёС‚ kubernates, РїСЂРѕРІРµСЂСЏСЏ С‡С‚Рѕ pod РЅРµ СЃРґРѕС…
 
   /api/order/create_order:
     post:
       tags:
         - "Client orchestrator"
-      summary: Оркестрация для создания нового заказа
+      summary: РћСЂРєРµСЃС‚СЂР°С†РёСЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РЅРѕРІРѕРіРѕ Р·Р°РєР°Р·Р°
       operationId: orderOrchestratorRegisterClient
       responses:
         '200':
-          description: Заказ успешно создан
+          description: Р—Р°РєР°Р· СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ
 
