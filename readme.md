@@ -56,6 +56,14 @@ public function request(string $url): Result
 ``` 
 
 ## <a name="interaction"></a> Взаимодействие микросервисов
+Взаимодействие микросервисов сделано на синхронное http взаимодействии через rest.
+
+[Файл с описанием rest интерфейсов](final/docs/openapi.yaml)
+
+![Описание rest интерфейсов](final/docs/openapi.png)
+
+[Посмотреть интерфейсы в Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/AntonZylyov/microservices_architect/master/final/docs/openapi.yaml)
+
 
 
 ## <a name="saga"></a> Сага и оркестратор

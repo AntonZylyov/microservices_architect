@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: Архитектор программного обеспечения. Итоговый набор микросервисов
+  version: 1.0.0
+tags:
+  - name: Auth service
+    description: Сервис работы с пользователеми
+  - name: Billing service
+    description: Сервис для работы с оплатами
+  - name: Client service
+    description: Сервис работы с клиентами
+  - name: Order service
+    description: Сервис заказов
+  - name: Notification service
+    description: Сервис уведомлений
+  - name: Client orchestrator
+    description: Оркестратор создания клиента
+  - name: Order orchestrator
+    description: Оркестратор создания заказа
+
+
+paths:
+  /api/auth:
+    get:
+      tags:
+        - "Auth service"
+      summary: Сервис скажет "I am auth service"
+      operationId: authServiceHello
+      responses:
+        '200':
+          description: "I am auth service"
+
+  /api/auth/health:
+    get:
+      tags:
+        - "Auth service"
+      summary: Проверка что сервис живой
+      operationId: authServiceHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /api/auth/authorize:
+    post:
+      tags:
+        - "Auth service"
+      summary: Проверка авторизации для Api Gateway
+      operationId: authServiceAuthorize
+      responses:
+        '200':
+          description: В куке приходит идентификатор сессии, если с ним все хорошо, ставятся заголовки X-UserId и X-ClientId
+
+  /api/auth/login:
+    post:
+      tags:
+        - "Auth service"
+      summary: Авторизация
+      operationId: authServiceLogin
+      responses:
+        '200':
+          description: "Авторизация: по логину и паролю ставится сессионная кука"
+
+  /api/auth/logout:
+    get:
+      tags:
+        - "Auth service"
+      summary: Логаут
+      operationId: authServiceLogout
+      responses:
+        '200':
+          description: Очищается кука с сессией
+
+  /api/auth/signin:
+    get:
+      tags:
+        - "Auth service"
+      summary: Сюда Api Gateway редиректит если нет авторизации
+      operationId: authServiceSignin
+      responses:
+        '200':
+          description: Страница с предложением авторизоваться
+
+  /api/auth/user/register:
+    post:
+      tags:
+        - "Auth service"
+      summary: Регистрация пользователя
+      operationId: authServiceRegister
+      responses:
+        '200':
+          description: Регистрация пользователя
+
+
+  /dev/billingService:
+    get:
+      tags:
+        - "Billing service"
+      summary: Сервис скажет "I am billing service"
+      operationId: billingServiceHello
+      responses:
+        '200':
+          description: "I am billing service"
+  /dev/billingService/health:
+    get:
+      tags:
+        - "Billing service"
+      summary: Проверка что сервис живой
+      operationId: billingServiceHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /dev/billingService/billing/createAccount:
+    post:
+      tags:
+        - "Billing service"
+      summary: Создание новой учетки в системе оплат
+      operationId: billingServiceCreateAccount
+      responses:
+        '200':
+          description: Учетка успешно создана
+
+  "/dev/billingService/billing/{clientId}":
+    get:
+      tags:
+        - "Billing service"
+      summary: Информация о счете
+      operationId: billingServiceAccountInfo
+      parameters:
+        - name: clientId
+          in: path
+          description: ID клиента
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Информация о счете
+
+  /dev/billingService/billing/withdraw:
+    post:
+      tags:
+        - "Billing service"
+      summary: Списание денег
+      operationId: billingServiceWithdraw
+      responses:
+        '200':
+          description: Деньгм списаны
+
+  /dev/billingService/billing/deposit:
+    post:
+      tags:
+        - "Billing service"
+      summary: Зачисление денег
+      operationId: billingServiceDeposit
+      responses:
+        '200':
+          description: Деньги зачислены
+
+
+  /dev/clientService:
+    get:
+      tags:
+        - "Client service"
+      summary: Сервис скажет "I am client service"
+      operationId: clientServiceHello
+      responses:
+        '200':
+          description: "I am client service"
+  /dev/clientService/health:
+    get:
+      tags:
+        - "Client service"
+      summary: Проверка что сервис живой
+      operationId: clientServiceHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /dev/clientService/client/add:
+    post:
+      tags:
+        - "Client service"
+      summary: Создание нового клиента
+      operationId: clientServiceClientAdd
+      responses:
+        '200':
+          description: Клиент успешно создан
+
+  "/dev/clientService/client/{clientId}":
+    get:
+      tags:
+        - "Client service"
+      summary: Информация о счете
+      operationId: clientServiceClientInfo
+      parameters:
+        - name: clientId
+          in: path
+          description: ID клиента
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Информация о клиенте
+
+  /dev/clientService/client/approve:
+    post:
+      tags:
+        - "Client service"
+      summary: Подтверждение клиента в процессе саги
+      operationId: clientServiceClientApprove
+      responses:
+        '200':
+          description: Клиент подтвержден
+
+  /dev/clientService/client/reject:
+    post:
+      tags:
+        - "Client service"
+      summary: Удаление клиента в процессе саги
+      operationId: clientServiceClientReject
+      responses:
+        '200':
+          description: Клиент удален
+
+
+  /dev/notificationService:
+    get:
+      tags:
+        - "Notification service"
+      summary: Сервис скажет "I am notification service"
+      operationId: notificationServiceHello
+      responses:
+        '200':
+          description: "I am notification service"
+  /dev/notificationService/health:
+    get:
+      tags:
+        - "Notification service"
+      summary: Проверка что сервис живой
+      operationId: notificationServiceHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /dev/notificationService/notification/last:
+    get:
+      tags:
+        - "Notification service"
+      summary: Получить последнее отправленное уведомление
+      operationId: notificationServiceLast
+      responses:
+        '200':
+          description: Последнее отправленное уведомление
+
+  /dev/notificationService/notify/newClientCreated:
+    post:
+      tags:
+        - "Notification service"
+      summary: Уведомление о новом клиенте
+      operationId: notificationServiceNewClientCreated
+      responses:
+        '200':
+          description: Уведомление о новом клиенте
+
+  /dev/notificationService/notify/newOrderCreated:
+    post:
+      tags:
+        - "Notification service"
+      summary: Уведомление о новом заказе
+      operationId: notificationServiceNewOrderCreated
+      responses:
+        '200':
+          description: Уведомление о новом заказе
+
+
+  /dev/orderService:
+    get:
+      tags:
+        - "Order service"
+      summary: Сервис скажет "I am order service"
+      operationId: orderServiceHello
+      responses:
+        '200':
+          description: "I am order service"
+  /dev/orderService/health:
+    get:
+      tags:
+        - "Order service"
+      summary: Проверка что сервис живой
+      operationId: orderServiceHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /dev/orderService/order/create:
+    post:
+      tags:
+        - "Order service"
+      summary: Создание нового заказа
+      operationId: orderServiceCreateOreder
+      responses:
+        '200':
+          description: Заказ успешно создан
+
+  /dev/clientService/order/confirm:
+    post:
+      tags:
+        - "Order service"
+      summary: Подтверждение заказа в процессе саги
+      operationId: orderServiceOrderConfirm
+      responses:
+        '200':
+          description: Заказа подтвержден
+
+  /dev/clientService/order/reject:
+    post:
+      tags:
+        - "Order service"
+      summary: Удаление заказа в процессе саги
+      operationId: orderServiceOrderReject
+      responses:
+        '200':
+          description: Заказа удален
+
+
+  /api/client:
+    get:
+      tags:
+        - "Client orchestrator"
+      summary: Сервис скажет "I am client orchestrator"
+      operationId: clientOrchestratorHello
+      responses:
+        '200':
+          description: "I am client orchestrator"
+  /api/client/health:
+    get:
+      tags:
+        - "Client orchestrator"
+      summary: Проверка что сервис живой
+      operationId: clientOrchestratorHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /api/client/register_client:
+    post:
+      tags:
+        - "Client orchestrator"
+      summary: Оркестрация для создания нового клиента
+      operationId: clientOrchestratorRegisterClient
+      responses:
+        '200':
+          description: Клиент успешно создан
+
+
+  /api/order:
+    get:
+      tags:
+        - "Client orchestrator"
+      summary: Сервис скажет "I am order orchestrator"
+      operationId: orderOrchestratorHello
+      responses:
+        '200':
+          description: "I am order orchestrator"
+  /api/order/health:
+    get:
+      tags:
+        - "Client orchestrator"
+      summary: Проверка что сервис живой
+      operationId: orderOrchestratorHealth
+      responses:
+        '200':
+          description: Сюда ходит kubernates, проверяя что pod не сдох
+
+  /api/order/create_order:
+    post:
+      tags:
+        - "Client orchestrator"
+      summary: Оркестрация для создания нового заказа
+      operationId: orderOrchestratorRegisterClient
+      responses:
+        '200':
+          description: Заказ успешно создан
+
